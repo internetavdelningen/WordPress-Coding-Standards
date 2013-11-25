@@ -117,25 +117,6 @@ class WordPress_Sniffs_WhiteSpace_ScopeIndentSniff implements PHP_CodeSniffer_Sn
         // indent that we expect this current content to be.
         $expectedIndent = $this->calculateExpectedIndent($tokens, $firstToken);
 
-        // Don't process the first token if it is a closure because they have
-        // different indentation rules as they are often used as function arguments
-        // for multi-line function calls. But continue to process the content of the
-        // closure because it should be indented as normal.
-        if ($tokens[$firstToken]['code'] !== T_CLOSURE
-            && $tokens[$firstToken]['column'] !== $expectedIndent
-        ) {
-            if (1 <= $expectedIndent)
-                $error = 'Incorrect indentation; expected %s space, found %s';
-            else
-                $error = 'Incorrect indentation; expected %s spaces, found %s';
-
-            $data = array(
-                     ($expectedIndent - 1),
-                     ($tokens[$firstToken]['column'] - 1),
-                    );
-            $phpcsFile->addError($error, $stackPtr, 'Incorrect', $data);
-        }
-
         $scopeOpener = $tokens[$stackPtr]['scope_opener'];
         $scopeCloser = $tokens[$stackPtr]['scope_closer'];
 
